@@ -19,7 +19,7 @@ import {
   Text
 } from "native-base";
 
-import Expo from "expo";
+// import Expo from "expo";
 
 export default class StackedLabelExample extends Component {
   constructor(props) {
@@ -32,12 +32,12 @@ export default class StackedLabelExample extends Component {
   }
 
   async UNSAFE_componentWillMount() {
-    await Expo.Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
-    });
-    this.setState({ loading: false });
+    // await Expo.Font.loadAsync({
+    //   Roboto: require("native-base/Fonts/Roboto.ttf"),
+    //   Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    //   Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+    // });
+    // this.setState({ loading: false });
   }
 
   onValueChange(value) {
@@ -57,7 +57,7 @@ export default class StackedLabelExample extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Expo.AppLoading />;
+      // return <Expo.AppLoading />;
     }
     return (
       <Container>
@@ -123,9 +123,9 @@ export default class StackedLabelExample extends Component {
                 <Text>Measurements</Text>
               </CardItem>
               {this.state.Sork ? (
-                <MeasurementsForSorK />
-              ) : (
                 <MeasurementsForPorJ />
+              ) : (
+                <MeasurementsForSorK />
               )}
             </Card>
             <Button block info>
