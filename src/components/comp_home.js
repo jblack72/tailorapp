@@ -19,6 +19,8 @@ import {
   Text
 } from "native-base";
 
+// import firebase
+import db from "firebase";
 // import Expo from "expo";
 
 export default class StackedLabelExample extends Component {
@@ -27,7 +29,8 @@ export default class StackedLabelExample extends Component {
     this.state = {
       selected: "key0",
       loading: true,
-      Sork: true
+      Sork: true,
+      order: {}
     };
   }
 
@@ -38,6 +41,29 @@ export default class StackedLabelExample extends Component {
     //   Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
     // });
     // this.setState({ loading: false });
+  }
+
+  componentDidMount() {
+    this.setState({
+      order: {
+        "cloth type": {
+          measurements: {
+            length: 0,
+            shoulder: 0,
+            sleeves: 0,
+            chest: 0,
+            stomach: 0,
+            seat: 0,
+            fontFix: 0,
+            collom: 0,
+            cuff: 0
+          }
+        },
+        name: "",
+        mobile: "",
+        gender: ""
+      }
+    });
   }
 
   onValueChange(value) {
@@ -55,6 +81,46 @@ export default class StackedLabelExample extends Component {
     });
   }
 
+  saveToDB() {
+    // this.setState(
+    //   {
+    //     order: {
+    //       "cloth type": {
+    //         measurements: {
+    //           length: 0,
+    //           shoulder: 0,
+    //           sleeves: 0,
+    //           chest: 0,
+    //           stomach: 0,
+    //           seat: 0,
+    //           fontFix: 0,
+    //           collom: 0,
+    //           cuff: 0
+    //         }
+    //       },
+
+    //       mobile: "",
+    //       gender: ""
+    //     }
+    //   },
+    // () => {
+    let dbCon = db.database().ref("/order");
+    console.log("DB Con is ", this.state.order);
+
+    let obj = {};
+    obj["1"] = this.state.order;
+    dbCon.set(obj);
+    // }
+    // );
+  }
+
+  genericSetState(keyName, value) {
+    console.log("keyName is ", keyName, "Value is ", value);
+
+    this.state.order[keyName] = value;
+    console.log("order value is ", this.state.order);
+  }
+
   render() {
     if (this.state.loading) {
       // return <Expo.AppLoading />;
@@ -64,7 +130,7 @@ export default class StackedLabelExample extends Component {
         <Header>
           <Left />
           <Body>
-            <Title>Header</Title>
+            <Title>Home</Title>
           </Body>
           <Right>
             <Button
@@ -85,19 +151,37 @@ export default class StackedLabelExample extends Component {
                 <Body>
                   <Item inlineLabel>
                     <Label>Name</Label>
-                    <Input />
+                    <Input
+                      onChangeText={name => this.genericSetState("name", name)}
+                      value={this.state.name}
+                    />
                   </Item>
                   <Item inlineLabel last>
                     <Label>Mob</Label>
-                    <Input />
+                    <Input
+                      onChangeText={mobile =>
+                        this.genericSetState("mobile", mobile)
+                      }
+                      value={this.state.mobile}
+                    />
                   </Item>
                   <Item inlineLabel last>
                     <Label>Gender</Label>
-                    <Input />
+                    <Input
+                      onChangeText={gender =>
+                        this.genericSetState("gender", gender)
+                      }
+                      value={this.state.gender}
+                    />
                   </Item>
                   <Item inlineLabel last>
                     <Label>Order no</Label>
-                    <Input />
+                    <Input
+                      onChangeText={order =>
+                        this.genericSetState("order", order)
+                      }
+                      value={this.state.order}
+                    />
                   </Item>
                 </Body>
               </CardItem>
@@ -131,7 +215,7 @@ export default class StackedLabelExample extends Component {
             <Button block info>
               <Text> Upload Image </Text>
             </Button>
-            <Button block primary>
+            <Button block primary onPress={this.saveToDB.bind(this)}>
               <Text> Submit </Text>
             </Button>
           </Form>
