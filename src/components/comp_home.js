@@ -27,7 +27,7 @@ export default class StackedLabelExample extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: "key0",
+      selected: "Shirt",
       loading: true,
       Sork: true,
       order: {}
@@ -46,18 +46,16 @@ export default class StackedLabelExample extends Component {
   componentDidMount() {
     this.setState({
       order: {
-        "cloth type": {
-          measurements: {
-            length: 0,
-            shoulder: 0,
-            sleeves: 0,
-            chest: 0,
-            stomach: 0,
-            seat: 0,
-            fontFix: 0,
-            collom: 0,
-            cuff: 0
-          }
+        Shirt: {
+          length: 0,
+          shoulder: 0,
+          sleeves: 0,
+          chest: 0,
+          stomach: 0,
+          seat: 0,
+          fontFix: 0,
+          collom: 0,
+          cuff: 0
         },
         name: "",
         mobile: "",
@@ -66,59 +64,49 @@ export default class StackedLabelExample extends Component {
     });
   }
 
-  onValueChange(value) {
+  onValueChange(previousValue, currentValue) {
     let temp = null;
 
-    if (value == "key0" || value == "key3") {
+    if (currentValue == "Shirt" || currentValue == "Kurta") {
       temp = true;
     } else {
       temp = false;
     }
 
     this.setState({
-      selected: value,
+      selected: currentValue,
       Sork: temp
     });
+
+    this.genericSetState(previousValue, currentValue);
   }
 
   saveToDB() {
-    // this.setState(
-    //   {
-    //     order: {
-    //       "cloth type": {
-    //         measurements: {
-    //           length: 0,
-    //           shoulder: 0,
-    //           sleeves: 0,
-    //           chest: 0,
-    //           stomach: 0,
-    //           seat: 0,
-    //           fontFix: 0,
-    //           collom: 0,
-    //           cuff: 0
-    //         }
-    //       },
-
-    //       mobile: "",
-    //       gender: ""
-    //     }
-    //   },
-    // () => {
-    let dbCon = db.database().ref("/order");
+    let dbCon = db.database().ref("/orders");
     console.log("DB Con is ", this.state.order);
 
     let obj = {};
     obj["1"] = this.state.order;
     dbCon.set(obj);
-    // }
-    // );
   }
 
-  genericSetState(keyName, value) {
-    console.log("keyName is ", keyName, "Value is ", value);
-
-    this.state.order[keyName] = value;
-    console.log("order value is ", this.state.order);
+  genericSetState(keyName1, value, keyName2 = "") {
+    if (keyName2 == "") {
+      if (
+        keyName1 == "Shirt" ||
+        keyName1 == "Pant" ||
+        keyName1 == "Jean" ||
+        keyName1 == "Kurta"
+      ) {
+        let obj = JSON.stringify(this.state.order);
+        obj = obj.replace(keyName1, value);
+        this.state.order = JSON.parse(obj);
+      } else {
+        this.state.order[keyName1] = value;
+      }
+    } else {
+      this.state.order.clothtype[keyName2] = value;
+    }
   }
 
   render() {
@@ -176,12 +164,7 @@ export default class StackedLabelExample extends Component {
                   </Item>
                   <Item inlineLabel last>
                     <Label>Order no</Label>
-                    <Input
-                      onChangeText={order =>
-                        this.genericSetState("order", order)
-                      }
-                      value={this.state.order}
-                    />
+                    <Input editable={false} value={this.state.order.orderID} />
                   </Item>
                 </Body>
               </CardItem>
@@ -195,12 +178,14 @@ export default class StackedLabelExample extends Component {
                   iosIcon={<Icon name="ios-arrow-down-outline" />}
                   style={{ width: undefined }}
                   selectedValue={this.state.selected}
-                  onValueChange={this.onValueChange.bind(this)}
+                  onValueChange={currentValue =>
+                    this.onValueChange(this.state.selected, currentValue)
+                  }
                 >
-                  <Picker.Item label="Shirts" value="key0" />
-                  <Picker.Item label="Pants" value="key1" />
-                  <Picker.Item label="Jeans" value="key2" />
-                  <Picker.Item label="kurta" value="key3" />
+                  <Picker.Item label="Shirt" value="Shirt" />
+                  <Picker.Item label="Pant" value="Pant" />
+                  <Picker.Item label="Jean" value="Jean" />
+                  <Picker.Item label="Kurta" value="Kurta" />
                 </Picker>
               </CardItem>
               <CardItem header bordered>
