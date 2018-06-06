@@ -23,6 +23,10 @@ import {
 import db from "firebase";
 // import Expo from "expo";
 
+// import for SorK and PorJ
+import MeasurementsForSorK from "./comp_measurements_for_sork";
+import MeasurementsForPorJ from "./comp_measurements_for_porj";
+
 export default class StackedLabelExample extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +34,8 @@ export default class StackedLabelExample extends Component {
       selected: "Shirt",
       loading: true,
       Sork: true,
-      order: {}
+      basicInfo: {},
+      clothType: {}
     };
   }
 
@@ -43,31 +48,25 @@ export default class StackedLabelExample extends Component {
     // this.setState({ loading: false });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.setState({
-      order: {
-        Shirt: {
-          length: 0,
-          shoulder: 0,
-          sleeves: 0,
-          chest: 0,
-          stomach: 0,
-          seat: 0,
-          fontFix: 0,
-          collom: 0,
-          cuff: 0
-        },
+      basicInfo: {
         name: "",
         mobile: "",
         gender: ""
+      },
+      clothType: {
+        type: "shirt"
       }
     });
   }
 
-  onValueChange(previousValue, currentValue) {
+  onValueChange(currentValue) {
     let temp = null;
 
-    if (currentValue == "Shirt" || currentValue == "Kurta") {
+    console.log("current Value is ", currentValue);
+
+    if (currentValue == "shirt" || currentValue == "kurta") {
       temp = true;
     } else {
       temp = false;
@@ -78,35 +77,22 @@ export default class StackedLabelExample extends Component {
       Sork: temp
     });
 
-    this.genericSetState(previousValue, currentValue);
+    this.setBasicInfo("clothType", currentValue);
   }
 
-  saveToDB() {
-    let dbCon = db.database().ref("/orders");
-    console.log("DB Con is ", this.state.order);
+  setBasicInfo(key, value) {
+    switch (key) {
+      case "clothType":
+        this.state.clothType.type = value;
+        console.log("in switch ", this.state.clothType);
+        break;
 
-    let obj = {};
-    obj["1"] = this.state.order;
-    dbCon.set(obj);
-  }
-
-  genericSetState(keyName1, value, keyName2 = "") {
-    if (keyName2 == "") {
-      if (
-        keyName1 == "Shirt" ||
-        keyName1 == "Pant" ||
-        keyName1 == "Jean" ||
-        keyName1 == "Kurta"
-      ) {
-        let obj = JSON.stringify(this.state.order);
-        obj = obj.replace(keyName1, value);
-        this.state.order = JSON.parse(obj);
-      } else {
-        this.state.order[keyName1] = value;
-      }
-    } else {
-      this.state.order.clothtype[keyName2] = value;
+      default:
+        this.state.basicInfo[key] = value;
+        break;
     }
+
+    console.log(this.state.basicInfo);
   }
 
   render() {
@@ -140,31 +126,29 @@ export default class StackedLabelExample extends Component {
                   <Item inlineLabel>
                     <Label>Name</Label>
                     <Input
-                      onChangeText={name => this.genericSetState("name", name)}
-                      value={this.state.name}
+                      onChangeText={name => this.setBasicInfo("name", name)}
+                      // value={this.state.name}
                     />
                   </Item>
                   <Item inlineLabel last>
                     <Label>Mob</Label>
                     <Input
                       onChangeText={mobile =>
-                        this.genericSetState("mobile", mobile)
+                        this.setBasicInfo("mobile", mobile)
                       }
-                      value={this.state.mobile}
                     />
                   </Item>
                   <Item inlineLabel last>
                     <Label>Gender</Label>
                     <Input
                       onChangeText={gender =>
-                        this.genericSetState("gender", gender)
+                        this.setBasicInfo("gender", gender)
                       }
-                      value={this.state.gender}
                     />
                   </Item>
                   <Item inlineLabel last>
                     <Label>Order no</Label>
-                    <Input editable={false} value={this.state.order.orderID} />
+                    <Input editable={false} value={"1"} />
                   </Item>
                 </Body>
               </CardItem>
@@ -178,126 +162,32 @@ export default class StackedLabelExample extends Component {
                   iosIcon={<Icon name="ios-arrow-down-outline" />}
                   style={{ width: undefined }}
                   selectedValue={this.state.selected}
-                  onValueChange={currentValue =>
-                    this.onValueChange(this.state.selected, currentValue)
-                  }
+                  onValueChange={this.onValueChange.bind(this)}
                 >
-                  <Picker.Item label="Shirt" value="Shirt" />
-                  <Picker.Item label="Pant" value="Pant" />
-                  <Picker.Item label="Jean" value="Jean" />
-                  <Picker.Item label="Kurta" value="Kurta" />
+                  <Picker.Item label="Shirt" value="shirt" />
+                  <Picker.Item label="Pant" value="pant" />
+                  <Picker.Item label="Jean" value="jean" />
+                  <Picker.Item label="Kurta" value="kurta" />
                 </Picker>
               </CardItem>
               <CardItem header bordered>
                 <Text>Measurements</Text>
               </CardItem>
               {this.state.Sork ? (
-                <MeasurementsForPorJ />
+                <MeasurementsForSorK
+                  basicInfo={this.state.basicInfo}
+                  clothType={this.state.clothType}
+                />
               ) : (
-                <MeasurementsForSorK />
+                <MeasurementsForPorJ
+                  basicInfo={this.state.basicInfo}
+                  clothType={this.state.clothType}
+                />
               )}
             </Card>
-            <Button block info>
-              <Text> Upload Image </Text>
-            </Button>
-            <Button block primary onPress={this.saveToDB.bind(this)}>
-              <Text> Submit </Text>
-            </Button>
           </Form>
         </Content>
       </Container>
-    );
-  }
-}
-
-class MeasurementsForSorK extends Component {
-  render() {
-    return (
-      <CardItem bordered>
-        <Body>
-          <Item inlineLabel>
-            <Label>Length</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Waist</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Seat</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Fork</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Thigh</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Knee</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Bottom</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Back Rise</Label>
-            <Input />
-          </Item>
-        </Body>
-      </CardItem>
-    );
-  }
-}
-
-class MeasurementsForPorJ extends Component {
-  render() {
-    return (
-      <CardItem bordered>
-        <Body>
-          <Item inlineLabel>
-            <Label>Length</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Shoulder</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Sleeves</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Chest</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Stomach</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Seat</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Frontfix</Label>
-            <Input />
-            <Input />
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Collom</Label>
-            <Input />
-          </Item>
-          <Item inlineLabel>
-            <Label>Cuff</Label>
-            <Input />
-          </Item>
-        </Body>
-      </CardItem>
     );
   }
 }
