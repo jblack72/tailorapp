@@ -124,6 +124,7 @@ export default class StackedLabelExample extends Component {
                   <Item inlineLabel last>
                     <Label>Mob</Label>
                     <Input
+                      keyboardType="numeric"
                       onChangeText={mobile =>
                         this.setBasicInfo("mobile", mobile)
                       }

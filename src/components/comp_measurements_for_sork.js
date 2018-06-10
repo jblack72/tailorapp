@@ -61,12 +61,25 @@ class MeasurementsForSorK extends Component {
           <Item inlineLabel>
             <Label>Length</Label>
             <Input
+              returnKeyType={"next"}
+              onSubmitEditing={() => {
+                this.TextInput2._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={length => this.setMesurements("length", length)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Shoulder</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput2 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput3._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={shoulder =>
                 this.setMesurements("shoulder", shoulder)
               }
@@ -75,28 +88,70 @@ class MeasurementsForSorK extends Component {
           <Item inlineLabel>
             <Label>Sleeves</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput3 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput4._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={sleeves => this.setMesurements("sleeves", sleeves)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Chest</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput4 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput5._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={chest => this.setMesurements("chest", chest)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Stomach</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput5 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput6._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={stomach => this.setMesurements("stomach", stomach)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Seat</Label>
-            <Input onChangeText={seat => this.setMesurements("seat", seat)} />
+            <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput6 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput7._root.focus();
+              }}
+              keyboardType="numeric"
+              onChangeText={seat => this.setMesurements("seat", seat)}
+            />
           </Item>
           <Item inlineLabel>
             <Label>Frontfix</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput7 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput8._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={frontfix =>
                 this.setMesurements("frontfix", frontfix)
               }
@@ -105,12 +160,26 @@ class MeasurementsForSorK extends Component {
           <Item inlineLabel>
             <Label>Collom</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput8 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput9._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={collom => this.setMesurements("collom", collom)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Cuff</Label>
-            <Input onChangeText={cuff => this.setMesurements("cuff", cuff)} />
+            <Input
+              ref={input => {
+                this.TextInput9 = input;
+              }}
+              keyboardType="numeric"
+              onChangeText={cuff => this.setMesurements("cuff", cuff)}
+            />
           </Item>
           <Button block info>
             <Text> Upload Image </Text>

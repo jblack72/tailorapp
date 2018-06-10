@@ -60,42 +60,105 @@ class MeasurementsForPorJ extends Component {
           <Item inlineLabel>
             <Label>Length</Label>
             <Input
+              returnKeyType={"next"}
+              onSubmitEditing={() => {
+                this.TextInput2._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={length => this.setMesurements("length", length)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Waist</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput2 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput3._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={waist => this.setMesurements("waist", waist)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Seat</Label>
-            <Input onChangeText={seat => this.setMesurements("seat", seat)} />
+            <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput3 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput4._root.focus();
+              }}
+              keyboardType="numeric"
+              onChangeText={seat => this.setMesurements("seat", seat)}
+            />
           </Item>
           <Item inlineLabel>
             <Label>Fork</Label>
-            <Input onChangeText={fork => this.setMesurements("fork", fork)} />
+            <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput4 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput5._root.focus();
+              }}
+              keyboardType="numeric"
+              onChangeText={fork => this.setMesurements("fork", fork)}
+            />
           </Item>
           <Item inlineLabel>
             <Label>Thigh</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput5 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput6._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={thigh => this.setMesurements("thigh", thigh)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Knee</Label>
-            <Input onChangeText={knee => this.setMesurements("knee", knee)} />
+            <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput6 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput7._root.focus();
+              }}
+              keyboardType="numeric"
+              onChangeText={knee => this.setMesurements("knee", knee)}
+            />
           </Item>
           <Item inlineLabel>
             <Label>Bottom</Label>
             <Input
+              returnKeyType={"next"}
+              ref={input => {
+                this.TextInput7 = input;
+              }}
+              onSubmitEditing={() => {
+                this.TextInput8._root.focus();
+              }}
+              keyboardType="numeric"
               onChangeText={bottom => this.setMesurements("bottom", bottom)}
             />
           </Item>
           <Item inlineLabel>
             <Label>Back Rise</Label>
             <Input
+              ref={input => {
+                this.TextInput8 = input;
+              }}
+              keyboardType="numeric"
               onChangeText={backrise =>
                 this.setMesurements("backrise", backrise)
               }
