@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import {} from "react-native";
+
 
 import { createStackNavigator } from "react-navigation";
 
 import Home from "./src/components/comp_home";
 import Manage from "./src/components/comp_manage";
-import firebase from "firebase";
+
 
 const config = {
   apiKey: "AIzaSyCbxz1wsoDqPPrCzcKjPsjO5GREP6dXmgo",
@@ -17,6 +17,12 @@ const config = {
 };
 
 firebase.initializeApp(config);
+
+//Handle Firebase warning
+console.ignoredYellowBox = [
+  "Setting a timer for a long period of time",
+  "Possible Unhandled Promise Rejection"
+];
 
 const RootStack = createStackNavigator(
   {

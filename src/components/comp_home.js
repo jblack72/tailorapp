@@ -35,7 +35,8 @@ export default class StackedLabelExample extends Component {
       loading: true,
       Sork: true,
       basicInfo: {},
-      clothType: {}
+      clothType: {},
+      order: {}
     };
   }
 
@@ -48,6 +49,9 @@ export default class StackedLabelExample extends Component {
       },
       clothType: {
         type: "shirt"
+      },
+      order: {
+        orderID: 0
       }
     });
   }
@@ -75,7 +79,10 @@ export default class StackedLabelExample extends Component {
     switch (key) {
       case "clothType":
         this.state.clothType.type = value;
-        console.log("in switch ", this.state.clothType);
+        // console.log("in switch ", this.state.clothType);
+        break;
+      case "orderID":
+        this.state.order.orderID = value;
         break;
 
       default:
@@ -117,6 +124,10 @@ export default class StackedLabelExample extends Component {
                   <Item inlineLabel>
                     <Label>Name</Label>
                     <Input
+                      returnKeyType={"next"}
+                      onSubmitEditing={() => {
+                        this.TextInput2._root.focus();
+                      }}
                       onChangeText={name => this.setBasicInfo("name", name)}
                       // value={this.state.name}
                     />
@@ -124,6 +135,13 @@ export default class StackedLabelExample extends Component {
                   <Item inlineLabel last>
                     <Label>Mob</Label>
                     <Input
+                      returnKeyType={"next"}
+                      ref={input => {
+                        this.TextInput2 = input;
+                      }}
+                      onSubmitEditing={() => {
+                        this.TextInput3._root.focus();
+                      }}
                       keyboardType="numeric"
                       onChangeText={mobile =>
                         this.setBasicInfo("mobile", mobile)
@@ -133,6 +151,13 @@ export default class StackedLabelExample extends Component {
                   <Item inlineLabel last>
                     <Label>Gender</Label>
                     <Input
+                      returnKeyType={"next"}
+                      ref={input => {
+                        this.TextInput3 = input;
+                      }}
+                      onSubmitEditing={() => {
+                        this.TextInput4._root.focus();
+                      }}
                       onChangeText={gender =>
                         this.setBasicInfo("gender", gender)
                       }
@@ -140,7 +165,15 @@ export default class StackedLabelExample extends Component {
                   </Item>
                   <Item inlineLabel last>
                     <Label>Order no</Label>
-                    <Input editable={false} value={"1"} />
+                    <Input
+                      ref={input => {
+                        this.TextInput4 = input;
+                      }}
+                      keyboardType="numeric"
+                      onChangeText={orderID =>
+                        this.setBasicInfo("orderID", orderID)
+                      }
+                    />
                   </Item>
                 </Body>
               </CardItem>
@@ -169,11 +202,13 @@ export default class StackedLabelExample extends Component {
                 <MeasurementsForSorK
                   basicInfo={this.state.basicInfo}
                   clothType={this.state.clothType}
+                  order={this.state.order}
                 />
               ) : (
                 <MeasurementsForPorJ
                   basicInfo={this.state.basicInfo}
                   clothType={this.state.clothType}
+                  order={this.state.order}
                 />
               )}
             </Card>
