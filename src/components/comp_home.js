@@ -34,6 +34,7 @@ export default class StackedLabelExample extends Component {
       selected: "Shirt",
       loading: true,
       Sork: true,
+
       basicInfo: {},
       clothType: {},
       order: {}
@@ -51,7 +52,8 @@ export default class StackedLabelExample extends Component {
         type: "shirt"
       },
       order: {
-        orderID: 0
+        orderID: 0,
+        orderIDError: false
       }
     });
   }
@@ -83,6 +85,7 @@ export default class StackedLabelExample extends Component {
         break;
       case "orderID":
         this.state.order.orderID = value;
+
         break;
 
       default:
@@ -90,13 +93,38 @@ export default class StackedLabelExample extends Component {
         break;
     }
 
-    console.log(this.state.basicInfo);
+    console.log(this.state.order);
+  }
+
+  checkOrderID(key, value) {
+
+
+    if (value && value != null) {
+      this.state.order.orderIDError = true;
+
+
+      let ref = db.database().ref("/orders/" + value);
+      ref.once("value", snapshot => {
+        if (snapshot.val()) {
+          this.state.order.orderIDError = false;
+
+
+          alert("key " + JSON.stringify(snapshot.val()));
+          this.forceUpdate();
+        }
+      });
+    } else {
+      this.state.order.orderIDError = false;
+
+    }
+    this.forceUpdate();
   }
 
   render() {
     if (this.state.loading) {
       // return <Expo.AppLoading />;
     }
+    console.log("re render");
     return (
       <Container>
         <Header>
@@ -129,7 +157,7 @@ export default class StackedLabelExample extends Component {
                         this.TextInput2._root.focus();
                       }}
                       onChangeText={name => this.setBasicInfo("name", name)}
-                      // value={this.state.name}
+                    // value={this.state.name}
                     />
                   </Item>
                   <Item inlineLabel last>
@@ -163,7 +191,7 @@ export default class StackedLabelExample extends Component {
                       }
                     />
                   </Item>
-                  <Item inlineLabel last>
+                  <Item inlineLabel last error>
                     <Label>Order no</Label>
                     <Input
                       ref={input => {
@@ -173,7 +201,15 @@ export default class StackedLabelExample extends Component {
                       onChangeText={orderID =>
                         this.setBasicInfo("orderID", orderID)
                       }
+                      onEndEditing={event =>
+                        this.checkOrderID("orderID", event.nativeEvent.text)
+                      }
                     />
+                    {this.state.order.orderIDError ? (
+                      <Icon name="checkmark-circle" />
+                    ) : (
+                        <Icon name="close-circle" />
+                      )}
                   </Item>
                 </Body>
               </CardItem>
@@ -205,12 +241,12 @@ export default class StackedLabelExample extends Component {
                   order={this.state.order}
                 />
               ) : (
-                <MeasurementsForPorJ
-                  basicInfo={this.state.basicInfo}
-                  clothType={this.state.clothType}
-                  order={this.state.order}
-                />
-              )}
+                  <MeasurementsForPorJ
+                    basicInfo={this.state.basicInfo}
+                    clothType={this.state.clothType}
+                    order={this.state.order}
+                  />
+                )}
             </Card>
           </Form>
         </Content>

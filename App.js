@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 
-
 import { createStackNavigator } from "react-navigation";
 
 import Home from "./src/components/comp_home";
 import Manage from "./src/components/comp_manage";
-
+import Result from './src/components/comp_result';
 
 const config = {
   apiKey: "AIzaSyCbxz1wsoDqPPrCzcKjPsjO5GREP6dXmgo",
@@ -24,6 +23,7 @@ console.ignoredYellowBox = [
   "Possible Unhandled Promise Rejection"
 ];
 
+
 const RootStack = createStackNavigator(
   {
     Home: {
@@ -31,10 +31,13 @@ const RootStack = createStackNavigator(
     },
     Manage: {
       screen: Manage
+    },
+    Result: {
+      screen: Result
     }
   },
   {
-    initialRouteName: "Home",
+    initialRouteName: "Manage",
     headerMode: "none"
   }
 );
