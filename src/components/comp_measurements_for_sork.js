@@ -31,11 +31,6 @@ class MeasurementsForSorK extends Component {
     };
   }
 
-
-  componentDidMount() {
-
-  }
-
   setMesurements(key, value) {
     this.state.measurements[key] = value;
     console.log("order ", this.state.order);
@@ -71,6 +66,11 @@ class MeasurementsForSorK extends Component {
           if (responsejson.ok) {
             responsejson.json().then(json => {
               console.log(json.url);
+
+              this.setState({
+                imageUrl:json.url
+              })
+
               let orderID = this.state.order.orderID;
 
               let dbCon = db.database().ref("/orders/" + orderID);
