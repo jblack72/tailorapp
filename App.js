@@ -6,6 +6,8 @@ import Home from "./src/components/comp_home";
 import Manage from "./src/components/comp_manage";
 import Result from './src/components/comp_result';
 
+import db from "firebase";
+
 const config = {
   apiKey: "AIzaSyCbxz1wsoDqPPrCzcKjPsjO5GREP6dXmgo",
   authDomain: "tailorapp-fd888.firebaseapp.com",
@@ -15,7 +17,7 @@ const config = {
   messagingSenderId: "324041981378"
 };
 
-firebase.initializeApp(config);
+db.initializeApp(config);
 
 //Handle Firebase warning
 console.ignoredYellowBox = [
@@ -37,7 +39,7 @@ const RootStack = createStackNavigator(
     }
   },
   {
-    initialRouteName: "Manage",
+    initialRouteName: "Home",
     headerMode: "none"
   }
 );
