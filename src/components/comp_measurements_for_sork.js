@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { CardItem, Body, Item, Label, Input, Button, Text } from "native-base";
-import { Image, Platform } from "react-native";
+import { Image, Platform ,StyleSheet,View, ActivityIndicator} from "react-native";
 // import firebase
 import db from "firebase";
 
@@ -27,7 +27,8 @@ class MeasurementsForSorK extends Component {
       basicInfo: this.props.basicInfo,
       clothType: this.props.clothType,
       order: this.props.order,
-      imageresult: null
+      imageresult: null,
+      loading:false
     };
   }
 
@@ -42,6 +43,10 @@ class MeasurementsForSorK extends Component {
     });
 
     console.log("image selected");
+
+    this.setState({
+      loading: true
+    })
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
@@ -83,6 +88,10 @@ class MeasurementsForSorK extends Component {
               ] = this.state.measurements;
               obj["image_url"] = json.url;
               dbCon.set(obj);
+
+              this.setState({
+                loading: false
+              })
 
             });
           }
@@ -237,6 +246,13 @@ class MeasurementsForSorK extends Component {
             }}
             source={{ uri: this.state.imageUrl }}
           />
+
+          {this.state.loading &&
+            <View style={styles.loading}>
+              <ActivityIndicator size='large' />
+            </View>
+          }
+
           <Button block info onPress={this.pickImage}>
             <Text> Upload Image and Submit </Text>
           </Button>
@@ -246,3 +262,15 @@ class MeasurementsForSorK extends Component {
   }
 }
 export default MeasurementsForSorK;
+
+const styles = StyleSheet.create({
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+});
