@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { CardItem, Body, Item, Label, Input, Button, Text } from "native-base";
-import { Image, Platform ,StyleSheet,View, ActivityIndicator} from "react-native";
+import { Image, Platform, StyleSheet, View, ActivityIndicator } from "react-native";
 
 import db from "firebase";
 
@@ -69,29 +69,26 @@ class MeasurementsForPorJ extends Component {
           let data = responsejson._bodyText;
           if (responsejson.ok) {
             responsejson.json().then(json => {
-              console.log(json.url);
-
-              this.setState({
-                imageUrl: json.url
-              })
+              // console.log(json.url);
 
               let orderID = this.state.order.orderID;
 
               let dbCon = db.database().ref("/orders/" + orderID);
 
               let obj = {};
+              let measurementsObj = {};
               obj = this.state.basicInfo;
-              obj["measurements"] = {};
-              obj["measurements"][
+              let measurements = this.state.measurements;
+              measurements['image_url'] = json.url;
+              measurementsObj["measurements"] = {};
+
+              measurementsObj["measurements"][
                 this.state.clothType.type
-              ] = this.state.measurements;
-              obj["image_url"] = json.url;
-              dbCon.set(obj);
+              ] = measurements
+              dbCon.update(obj);
+              dbCon.push(measurementsObj);
 
-
-              this.setState({
-                loading: false
-              })
+              alert("Successfully uploading the data to the server");
 
             });
           }

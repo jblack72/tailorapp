@@ -59,14 +59,10 @@ export default class StackedLabelExample extends Component {
   }
 
   onValueChange(currentValue) {
-    let temp = null;
-
-    console.log("current Value is ", currentValue);
+    let temp = false;
 
     if (currentValue == "shirt" || currentValue == "kurta") {
       temp = true;
-    } else {
-      temp = false;
     }
 
     this.setState({
@@ -93,7 +89,7 @@ export default class StackedLabelExample extends Component {
         break;
     }
 
-    console.log(this.state.order);
+    // console.log(this.state.order);
   }
 
   checkOrderID(key, value) {
@@ -109,7 +105,7 @@ export default class StackedLabelExample extends Component {
           this.state.order.orderIDError = false;
 
 
-          alert("key " + JSON.stringify(snapshot.val()));
+          // alert("key " + JSON.stringify(snapshot.val()));
           this.forceUpdate();
         }
       });
@@ -124,7 +120,7 @@ export default class StackedLabelExample extends Component {
     if (this.state.loading) {
       // return <Expo.AppLoading />;
     }
-    console.log("re render");
+
     return (
       <Container>
         <Header>

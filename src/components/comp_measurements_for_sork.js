@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { CardItem, Body, Item, Label, Input, Button, Text } from "native-base";
-import { Image, Platform ,StyleSheet,View, ActivityIndicator} from "react-native";
+import { Image, Platform, StyleSheet, View, ActivityIndicator } from "react-native";
 // import firebase
 import db from "firebase";
 
@@ -28,13 +28,16 @@ class MeasurementsForSorK extends Component {
       clothType: this.props.clothType,
       order: this.props.order,
       imageresult: null,
-      loading:false
+      loading: false
     };
   }
 
   setMesurements(key, value) {
     this.state.measurements[key] = value;
-    console.log("order ", this.state.order);
+    this.setState({
+      measurements: this.state.measurements
+    })
+
   }
 
   pickImage = async () => {
@@ -49,7 +52,7 @@ class MeasurementsForSorK extends Component {
     })
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      // this.setState({ image: result.uri });
 
       let base64Img = `data:image/jpg;base64,${result.base64}`;
       let apiUrl = "https://api.cloudinary.com/v1_1/dixwiepue/image/upload";
@@ -70,27 +73,28 @@ class MeasurementsForSorK extends Component {
           let data = responsejson._bodyText;
           if (responsejson.ok) {
             responsejson.json().then(json => {
-              console.log(json.url);
-
-              this.setState({
-                imageUrl:json.url
-              })
-
+              // console.log(json.url);
               let orderID = this.state.order.orderID;
 
               let dbCon = db.database().ref("/orders/" + orderID);
 
               let obj = {};
+              let measurementsObj = {};
               obj = this.state.basicInfo;
-              obj["measurements"] = {};
-              obj["measurements"][
+              let measurements = this.state.measurements;
+              measurements['image_url'] = json.url;
+              measurementsObj["measurements"] = {};
+              measurementsObj["measurements"][
                 this.state.clothType.type
-              ] = this.state.measurements;
-              obj["image_url"] = json.url;
-              dbCon.set(obj);
+              ] = measurements
+              dbCon.update(obj);
+              dbCon.push(measurementsObj);
+
+              alert("Successfully uploading the data to the server");
 
               this.setState({
-                loading: false
+                loading: false,
+                imageUrl: json.url
               })
 
             });
@@ -101,7 +105,7 @@ class MeasurementsForSorK extends Component {
   };
 
   render() {
-    console.log("image url ", this.state.imageUrl);
+    // console.log("image url ", this.state.imageUrl);
 
     return (
       <CardItem bordered>
