@@ -41,20 +41,20 @@ export default class StackedLabelExample extends Component {
     };
   }
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
+
+    const { navigation } = this.props;
+    const basicInfo = navigation.getParam('basicInfo', { name: '', gender: '', mobile: '' });
     this.setState({
-      basicInfo: {
-        name: "",
-        mobile: "",
-        gender: ""
-      },
+
       clothType: {
         type: "shirt"
       },
       order: {
         orderID: 0,
         orderIDError: false
-      }
+      },
+      basicInfo: basicInfo
     });
   }
 
@@ -86,6 +86,9 @@ export default class StackedLabelExample extends Component {
 
       default:
         this.state.basicInfo[key] = value;
+        this.setState({
+          basicInfo: this.state.basicInfo
+        })
         break;
     }
 
@@ -106,7 +109,7 @@ export default class StackedLabelExample extends Component {
 
 
           // alert("key " + JSON.stringify(snapshot.val()));
-          this.forceUpdate();
+
         }
       });
     } else {
@@ -153,7 +156,7 @@ export default class StackedLabelExample extends Component {
                         this.TextInput2._root.focus();
                       }}
                       onChangeText={name => this.setBasicInfo("name", name)}
-                    // value={this.state.name}
+                      value={this.state.basicInfo.name}
                     />
                   </Item>
                   <Item inlineLabel last>
@@ -170,6 +173,7 @@ export default class StackedLabelExample extends Component {
                       onChangeText={mobile =>
                         this.setBasicInfo("mobile", mobile)
                       }
+                      value={this.state.basicInfo.mobile}
                     />
                   </Item>
                   <Item inlineLabel last>
@@ -185,6 +189,7 @@ export default class StackedLabelExample extends Component {
                       onChangeText={gender =>
                         this.setBasicInfo("gender", gender)
                       }
+                      value={this.state.basicInfo.gender}
                     />
                   </Item>
                   <Item inlineLabel last error>
