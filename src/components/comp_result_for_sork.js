@@ -9,39 +9,40 @@ class ResultForSork extends Component {
 
     constructor(props) {
         super(props)
-        // alert('in Result for sork ' + JSON.stringify(this.props.measurements))
+        // alert('in Result for sork ' + JSON.stringify(this.props.uniqueKeys))
         this.state = {
             measurements: this.props.measurements,
             clothType: this.props.clothType,
-            imageURL: this.props.imageURL,
+            uniqueKey: this.props.uniqueKey,
             orderID: this.props.orderID,
-            basicInfo: this.props.basicInfo
+
         }
         // alert('imageURL ' + JSON.stringify(this.state.imageURL))
     }
 
     saveToDB() {
         let orderID = this.state.orderID;
+        let uniqueKey = this.state.uniqueKey;
         // alert("orderIDError is " + JSON.stringify(this.state.order));
-        console.log("Order status ", this.state.order);
+
         try {
             this.setState(
                 {
 
                 },
                 () => {
-                    let dbCon = db.database().ref("/orders/" + orderID);
+                    let dbCon = db.database().ref("/orders/" + orderID + '/' + uniqueKey);
 
-                    alert('measurements ' + JSON.stringify(this.state.measurements))
+                    // alert('measurements ' + JSON.stringify(this.state.measurements))
                     // let obj = this.state.measurements;
 
                     let obj = {};
 
-                    obj = this.state.basicInfo;
+                    // obj = this.state.
                     obj["measurements"] = this.state.measurements;
-                    obj["image_url"] = 'success';
-                    dbCon.set(obj);
-                    // console.log("obj info ", obj);
+                    // obj["image_url"] = 'success';
+
+                    dbCon.update(obj);
                     alert("Successfully uploading the data to the server");
                 }
             );
@@ -221,7 +222,7 @@ class ResultForSork extends Component {
                                     width: 320,
                                     resizeMode: "stretch"
                                 }}
-                                source={{ uri: this.state.imageURL }}
+                                source={{ uri: this.state.measurements.image_url }}
                             />
                         </CardItem>
                         <Button block info onPress={() => this.pickImage()}>

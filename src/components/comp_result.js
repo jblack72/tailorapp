@@ -3,36 +3,22 @@ import {
     Container,
     Header,
     View,
-    DeckSwiper,
-    Card,
+    Button,
+
     CardItem,
-    Thumbnail,
+
     Text,
     Left,
     Body,
     Icon,
-    Button,
-    Item,
-    Label,
-    Input
+    Title,
+    Right,
 } from "native-base";
-import { Image, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import ResultForSork from './comp_result_for_sork';
 import ResultForPorJ from './comp_result_for_porj';
 
-const cards = [
-    // {
-    //     text: 'Card One',
-    //     name: 'One',
-    //     image: require('../assests/login.png'),
-    // },
-    // {
-    //     text: 'Card One',
-    //     name: 'One',
-    //     image: require('../assests/login.png'),
-    // },
 
-];
 export default class SearchResults extends Component {
 
     constructor(props) {
@@ -40,7 +26,6 @@ export default class SearchResults extends Component {
         this.state = {
             basicInfo: {},
             measurements: [
-
                 {
                     shirt: {
                         chest: 100,
@@ -54,27 +39,25 @@ export default class SearchResults extends Component {
                         stomach: 100,
                     }
                 }
-
             ],
-
             measurementsType: [],
             imageURL: [],
-            orderID: []
-
+            orderID: [],
+            uniqueKeys: []
         }
     }
     componentWillMount() {
         const { navigation } = this.props;
         const measurement = navigation.getParam('measurements', 'NO-measurements');
         const info = navigation.getParam('basicInfo', { name: 'error', gender: 'error', mobile: 'error' })
-        const images = navigation.getParam('imageURL', [{ 'image_url': 'http://vollrath.com/ClientCss/images/VollrathImages/No_Image_Available.jpg' }])
+        const uniqueKeys = navigation.getParam('uniqueKeys', ['no keys'])
         const orderID = navigation.getParam('orderID', ['no orderID']);
 
         // alert('basic info result' + JSON.stringify(info))
-        alert('measurements ' + JSON.stringify(measurement))
+        // alert('measurements ' + JSON.stringify(measurement))
 
         // alert('images result' + JSON.stringify(images))
-
+        // alert('unique Keys' + JSON.stringify(uniqueKeys));
 
 
 
@@ -87,10 +70,12 @@ export default class SearchResults extends Component {
         });
 
         this.setState({
-            imageURL: images,
-            orderID: orderID
+            // imageURL: images,
+            orderID: orderID,
+            basicInfo: info,
+            uniqueKeys: uniqueKeys
         })
-        this.state.basicInfo = info;
+        // this.state.basicInfo = info;
     }
     componentDidMount() {
 
@@ -100,11 +85,31 @@ export default class SearchResults extends Component {
         // console.log('in render measurements ', this.state.measurements);
         // alert('in render measurements ' + JSON.stringify(this.state.basicInfo.name))
 
-
+        // alert('basic info ' + JSON.stringify(this.state.basicInfo))
         return (
 
             < Container >
-                <Header />
+                <Header>
+                    <Left>
+                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                            <Icon name='arrow-back' />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title>Result</Title>
+                    </Body>
+                    <Right>
+                        <Button onPress={
+                            () => this.props.navigation.push("Home", {
+                                basicInfo: this.state.basicInfo,
+                                orderID: this.state.orderID
+                            })
+                        } success>
+                            {/* <Icon name='arrow-back' /> */}
+                            <Text>New/Modify</Text>
+                        </Button>
+                    </Right>
+                </Header>
 
                 <CardItem>
                     <Left>
@@ -133,27 +138,27 @@ export default class SearchResults extends Component {
                                     <ResultForSork
                                         measurements={item}
                                         clothType={this.state.measurementsType[index]}
-                                        imageURL={this.state.imageURL[index]}
+                                        uniqueKey={this.state.uniqueKeys[index]}
                                         orderID={this.state.orderID[index]}
-                                        basicInfo={this.state.basicInfo}
+
                                     />
 
                                 ) : this.state.measurementsType[index] == 'kurta' ? (
                                     <ResultForSork
                                         measurements={item}
                                         clothType={this.state.measurementsType[index]}
-                                        imageURL={this.state.imageURL[index]}
+                                        uniqueKey={this.state.uniqueKeys[index]}
                                         orderID={this.state.orderID[index]}
-                                        basicInfo={this.state.basicInfo}
+
                                     />
 
                                 ) : (
                                             <ResultForPorJ
                                                 measurements={item}
                                                 clothType={this.state.measurementsType[index]}
-                                                imageURL={this.state.imageURL[index]}
+                                                uniqueKey={this.state.uniqueKeys[index]}
                                                 orderID={this.state.orderID[index]}
-                                                basicInfo={this.state.basicInfo}
+
                                             />
                                         )
                             }
