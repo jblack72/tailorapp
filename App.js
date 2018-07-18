@@ -4,7 +4,8 @@ import { createStackNavigator } from "react-navigation";
 
 import Home from "./src/components/comp_home";
 import Manage from "./src/components/comp_manage";
-import Result from './src/components/comp_result';
+import Result from "./src/components/comp_result";
+import Login from "./src/components/comp_login";
 
 import db from "firebase";
 
@@ -25,7 +26,6 @@ console.ignoredYellowBox = [
   "Possible Unhandled Promise Rejection"
 ];
 
-
 const RootStack = createStackNavigator(
   {
     Home: {
@@ -36,10 +36,13 @@ const RootStack = createStackNavigator(
     },
     Result: {
       screen: Result
+    },
+    Login: {
+      screen: Login
     }
   },
   {
-    initialRouteName: "Manage",
+    initialRouteName: "Login",
     headerMode: "none"
   }
 );

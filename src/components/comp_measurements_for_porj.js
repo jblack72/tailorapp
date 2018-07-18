@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 
 import { CardItem, Body, Item, Label, Input, Button, Text } from "native-base";
-import { Image, Platform, StyleSheet, View, ActivityIndicator } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  View,
+  ActivityIndicator
+} from "react-native";
 
 import db from "firebase";
 
@@ -21,7 +27,8 @@ class MeasurementsForPorJ extends Component {
         knee: 0,
         bottom: 0,
         backrise: 0,
-        image_url: 'http://vignette1.wikia.nocookie.net/ofibty/images/5/56/Insert-Photo-Here.jpg/revision/latest?cb=20130607022022'
+        image_url:
+          "http://vignette1.wikia.nocookie.net/ofibty/images/5/56/Insert-Photo-Here.jpg/revision/latest?cb=20130607022022"
       },
 
       basicInfo: this.props.basicInfo,
@@ -36,7 +43,7 @@ class MeasurementsForPorJ extends Component {
     this.state.measurements[key] = value;
     this.setState({
       measurements: this.state.measurements
-    })
+    });
   }
 
   pickImage = async () => {
@@ -48,7 +55,7 @@ class MeasurementsForPorJ extends Component {
 
     this.setState({
       loading: true
-    })
+    });
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
@@ -82,24 +89,22 @@ class MeasurementsForPorJ extends Component {
               let measurementsObj = {};
               obj = this.state.basicInfo;
               let measurements = this.state.measurements;
-              measurements['image_url'] = json.url;
+              measurements["image_url"] = json.url;
               measurementsObj["measurements"] = {};
 
               measurementsObj["measurements"][
                 this.state.clothType.type
-              ] = measurements
+              ] = measurements;
               dbCon.update(obj);
               dbCon.push(measurementsObj);
 
               alert("Successfully uploading the data to the server");
-
             });
           }
         })
         .catch(err => console.log(err));
     }
   };
-
 
   render() {
     return (
@@ -228,11 +233,11 @@ class MeasurementsForPorJ extends Component {
             }}
             source={{ uri: this.state.measurements.image_url }}
           />
-          {this.state.loading &&
+          {this.state.loading && (
             <View style={styles.loading}>
-              <ActivityIndicator size='large' />
+              <ActivityIndicator size="large" />
             </View>
-          }
+          )}
           <Button block info onPress={this.pickImage}>
             <Text> Upload Image and Submit</Text>
           </Button>
@@ -246,12 +251,12 @@ export default MeasurementsForPorJ;
 
 const styles = StyleSheet.create({
   loading: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

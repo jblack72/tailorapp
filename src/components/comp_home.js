@@ -19,6 +19,8 @@ import {
   Text
 } from "native-base";
 
+import { Constants } from "expo";
+
 // import firebase
 import db from "firebase";
 // import Expo from "expo";
@@ -42,11 +44,13 @@ export default class StackedLabelExample extends Component {
   }
 
   componentWillMount() {
-
     const { navigation } = this.props;
-    const basicInfo = navigation.getParam('basicInfo', { name: '', gender: '', mobile: '' });
+    const basicInfo = navigation.getParam("basicInfo", {
+      name: "",
+      gender: "",
+      mobile: ""
+    });
     this.setState({
-
       clothType: {
         type: "shirt"
       },
@@ -88,7 +92,7 @@ export default class StackedLabelExample extends Component {
         this.state.basicInfo[key] = value;
         this.setState({
           basicInfo: this.state.basicInfo
-        })
+        });
         break;
     }
 
@@ -96,25 +100,19 @@ export default class StackedLabelExample extends Component {
   }
 
   checkOrderID(key, value) {
-
-
     if (value && value != null) {
       this.state.order.orderIDError = true;
-
 
       let ref = db.database().ref("/orders/" + value);
       ref.once("value", snapshot => {
         if (snapshot.val()) {
           this.state.order.orderIDError = false;
 
-
           // alert("key " + JSON.stringify(snapshot.val()));
-
         }
       });
     } else {
       this.state.order.orderIDError = false;
-
     }
     this.forceUpdate();
   }
@@ -125,7 +123,7 @@ export default class StackedLabelExample extends Component {
     }
 
     return (
-      <Container>
+      <Container style={{ paddingTop: Constants.statusBarHeight }}>
         <Header>
           <Left />
           <Body>
@@ -209,8 +207,8 @@ export default class StackedLabelExample extends Component {
                     {this.state.order.orderIDError ? (
                       <Icon name="checkmark-circle" />
                     ) : (
-                        <Icon name="close-circle" />
-                      )}
+                      <Icon name="close-circle" />
+                    )}
                   </Item>
                 </Body>
               </CardItem>
@@ -242,12 +240,12 @@ export default class StackedLabelExample extends Component {
                   order={this.state.order}
                 />
               ) : (
-                  <MeasurementsForPorJ
-                    basicInfo={this.state.basicInfo}
-                    clothType={this.state.clothType}
-                    order={this.state.order}
-                  />
-                )}
+                <MeasurementsForPorJ
+                  basicInfo={this.state.basicInfo}
+                  clothType={this.state.clothType}
+                  order={this.state.order}
+                />
+              )}
             </Card>
           </Form>
         </Content>
