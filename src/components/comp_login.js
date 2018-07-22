@@ -14,6 +14,8 @@ import {
   Left
 } from "native-base";
 
+import { Image, View } from "react-native";
+
 export default class FormLogin extends Component {
   constructor(props) {
     super(props);
@@ -25,22 +27,27 @@ export default class FormLogin extends Component {
   }
 
   processlogin() {
-      if(this.state.textpass == this.state.actualpass)
-      {
-        this.props.navigation.navigate("Home");
-      }
+    if (this.state.textpass == this.state.actualpass) {
+      this.props.navigation.navigate("Manage");
+    }
   }
 
   render() {
     return (
-      <Container style={{ paddingTop: Constants.statusBarHeight }}>
+      <Container style={{ paddingTop: Constants.statusBarHeight,backgroundColor:"#5dade2" }}>
         <Header>
-        <Left />
+          <Left />
           <Body>
             <Title>MaxTailor</Title>
           </Body>
         </Header>
-        <Form>
+        <Form
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
           <FormItem inlineLabel>
             <Label>Username</Label>
             <Input value={`${this.state.username}`} />
@@ -49,7 +56,7 @@ export default class FormLogin extends Component {
             <Label>Password</Label>
             <Input
               secureTextEntry={true}
-              onChangeText={textpass => this.setState({textpass})}
+              onChangeText={textpass => this.setState({ textpass })}
             />
           </FormItem>
 

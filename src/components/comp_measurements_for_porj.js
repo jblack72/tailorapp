@@ -35,7 +35,8 @@ class MeasurementsForPorJ extends Component {
       clothType: this.props.clothType,
       order: this.props.order,
       imageresult: null,
-      loading: false
+      loading: false,
+      result: null
     };
   }
 
@@ -51,16 +52,20 @@ class MeasurementsForPorJ extends Component {
       base64: true
     });
 
-    console.log("image selected");
+    this.setState({
+      result: result
+    });
+  };
 
+  savetoDB = async () => {
     this.setState({
       loading: true
     });
 
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
+    if (!this.state.result.cancelled) {
+      this.setState({ image: this.state.result.uri });
 
-      let base64Img = `data:image/jpg;base64,${result.base64}`;
+      let base64Img = `data:image/jpg;base64,${this.state.result.base64}`;
       let apiUrl = "https://api.cloudinary.com/v1_1/dixwiepue/image/upload";
 
       let data = {
@@ -99,6 +104,11 @@ class MeasurementsForPorJ extends Component {
               dbCon.push(measurementsObj);
 
               alert("Successfully uploading the data to the server");
+
+              this.setState({
+                loading: false,
+                imageUrl: json.url
+              });
             });
           }
         })
@@ -238,8 +248,13 @@ class MeasurementsForPorJ extends Component {
               <ActivityIndicator size="large" />
             </View>
           )}
+
           <Button block info onPress={this.pickImage}>
-            <Text> Upload Image and Submit</Text>
+            <Text> Pick Image </Text>
+          </Button>
+
+          <Button block info onPress={this.savetoDB}>
+            <Text> Upload Image and Save </Text>
           </Button>
         </Body>
       </CardItem>

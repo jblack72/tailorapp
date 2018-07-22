@@ -35,15 +35,22 @@ class ResultForPorJ extends Component {
       orderID: this.props.orderID,
       loading: false,
       image_url:
-        "http://vignette1.wikia.nocookie.net/ofibty/images/5/56/Insert-Photo-Here.jpg/revision/latest?cb=20130607022022"
+        "http://vignette1.wikia.nocookie.net/ofibty/images/5/56/Insert-Photo-Here.jpg/revision/latest?cb=20130607022022",
+      result: null
     };
   }
 
-  saveToDB = async () => {
+  pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       base64: true
     });
 
+    this.setState({
+      result: result
+    });
+  };
+
+  savetoDB = async () => {
     console.log(this.state.uniqueKey);
     console.log("image selected");
     let uniqueKey = this.state.uniqueKey;
@@ -52,52 +59,77 @@ class ResultForPorJ extends Component {
       loading: true
     });
 
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
+    if (this.state.result) {
+      if (this.state.result.cancelled) {
+        this.setState({
+          loading: false
+        });
+      }
+      if (!this.state.result.cancelled) {
+        this.setState({ image: this.state.result.uri });
 
-      let base64Img = `data:image/jpg;base64,${result.base64}`;
-      let apiUrl = "https://api.cloudinary.com/v1_1/dixwiepue/image/upload";
+        let base64Img = `data:image/jpg;base64,${this.state.result.base64}`;
+        let apiUrl = "https://api.cloudinary.com/v1_1/dixwiepue/image/upload";
 
-      let data = {
-        file: base64Img,
-        upload_preset: "xvv0gosj"
-      };
+        let data = {
+          file: base64Img,
+          upload_preset: "xvv0gosj"
+        };
 
-      console.log("image selected another");
+        console.log("image selected another");
 
-      fetch(apiUrl, {
-        body: JSON.stringify(data),
-        headers: {
-          "content-type": "application/json"
-        },
-        method: "POST"
-      })
-        .then(responsejson => {
-          console.log("new image selected");
-          let data = responsejson._bodyText;
-          if (responsejson.ok) {
-            responsejson.json().then(json => {
-              console.log("connection success");
-              let dbCon = db
-                .database()
-                .ref("/orders/" + this.state.orderID + "/" + uniqueKey);
-
-              let obj = {};
-              obj["measurements"] = this.state.measurements;
-              obj["measurements"][this.state.clothType]["image_url"] = json.url;
-
-              console.log("before uploading");
-              dbCon.update(obj);
-              alert("Successfully uploading the data to the server");
-              console.log("before successfll");
-
-              this.setState({
-                loading: false
-              });
-            });
-          }
+        fetch(apiUrl, {
+          body: JSON.stringify(data),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
         })
-        .catch(err => console.log(err));
+          .then(responsejson => {
+            console.log("new image selected");
+            let data = responsejson._bodyText;
+            if (responsejson.ok) {
+              responsejson.json().then(json => {
+                console.log("connection success");
+                let dbCon = db
+                  .database()
+                  .ref("/orders/" + this.state.orderID + "/" + uniqueKey);
+
+                let obj = {};
+                obj["measurements"] = this.state.measurements;
+                obj["measurements"][this.state.clothType]["image_url"] =
+                  json.url;
+
+                console.log("before uploading");
+                dbCon.update(obj);
+                alert("Successfully uploading the data to the server");
+                console.log("before successfll");
+
+                this.setState({
+                  loading: false
+                });
+              });
+            }
+          })
+          .catch(err => console.log(err));
+      }
+    } else {
+      let dbCon = db
+        .database()
+        .ref("/orders/" + this.state.orderID + "/" + uniqueKey);
+
+      let obj = {};
+      obj["measurements"] = this.state.measurements;
+      // obj["measurements"][this.state.clothType]["image_url"] = json.url;
+
+      console.log("before uploading");
+      dbCon.update(obj);
+      alert("Successfully uploading the data to the server");
+      console.log("before successfll");
+
+      this.setState({
+        loading: false
+      });
     }
   };
 
@@ -113,7 +145,7 @@ class ResultForPorJ extends Component {
     return (
       <Card>
         <CardItem>
-          <Icon name="heart" style={{ color: "#ED4A6A" }} />
+          <Icon name="binoculars" style={{ color: "#2980b9" }} />
 
           <Text>{this.state.clothType}</Text>
         </CardItem>
@@ -268,6 +300,10 @@ class ResultForPorJ extends Component {
                 <ActivityIndicator size="large" />
               </View>
             )}
+
+            <Button block primary onPress={this.pickImage}>
+              <Text> Pick Image </Text>
+            </Button>
             <Button block primary onPress={this.saveToDB}>
               <Text> Submit </Text>
             </Button>

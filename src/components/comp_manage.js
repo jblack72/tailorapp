@@ -107,7 +107,15 @@ export default class InlineLabelExample extends Component {
                 uniqueKeys: uniqueKeys,
                 orderID: this.state.orderID
               });
-            } else alert("no record found. plz try again or add new record");
+              this.setState({
+                loading: false
+              });
+            } else {
+              alert("no record found. plz try again or add new record");
+              this.setState({
+                loading: false
+              });
+            }
           });
           break;
 
@@ -153,7 +161,15 @@ export default class InlineLabelExample extends Component {
                   uniqueKeys: uniqueKeys,
                   orderID: this.state.orderID
                 });
-              } else alert("no record found. plz try again or add new record");
+                this.setState({
+                  loading: false
+                });
+              } else {
+                alert("no record found. plz try again or add new record");
+                this.setState({
+                  loading: false
+                });
+              }
             });
 
           break;
@@ -198,8 +214,16 @@ export default class InlineLabelExample extends Component {
                   uniqueKeys: uniqueKeys,
                   orderID: this.state.orderID
                 });
+                this.setState({
+                  loading: false
+                });
                 // alert('measurements ' + JSON.stringify(mobileTotalresult))
-              } else alert("no record found. plz try again or add new record");
+              } else {
+                alert("no record found. plz try again or add new record");
+                this.setState({
+                  loading: false
+                });
+              }
             });
 
           break;

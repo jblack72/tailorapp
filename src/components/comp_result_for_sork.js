@@ -35,15 +35,23 @@ class ResultForSork extends Component {
       orderID: this.props.orderID,
       loading: false,
       image_url:
-        "http://vignette1.wikia.nocookie.net/ofibty/images/5/56/Insert-Photo-Here.jpg/revision/latest?cb=20130607022022"
+        "http://vignette1.wikia.nocookie.net/ofibty/images/5/56/Insert-Photo-Here.jpg/revision/latest?cb=20130607022022",
+      result: null
     };
     // alert('imageURL ' + JSON.stringify(this.state.imageURL))
   }
 
-  saveToDB = async () => {
+  pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       base64: true
     });
+
+    this.setState({
+      result: result
+    });
+  };
+
+  savetoDB = async () => {
     console.log(this.state.uniqueKey);
     console.log("image selected");
     let uniqueKey = this.state.uniqueKey;
@@ -52,6 +60,11 @@ class ResultForSork extends Component {
       loading: true
     });
 
+    if (result.cancelled) {
+      this.setState({
+        loading: false
+      });
+    }
     if (!result.cancelled) {
       this.setState({ image: result.uri });
 
@@ -115,7 +128,7 @@ class ResultForSork extends Component {
     return (
       <Card>
         <CardItem>
-          <Icon name="heart" style={{ color: "#ED4A6A" }} />
+          <Icon name="ios-shirt-outline" style={{ color: "#45b39d" }} />
 
           <Text>{this.state.clothType}</Text>
         </CardItem>
@@ -298,6 +311,10 @@ class ResultForSork extends Component {
                 <ActivityIndicator size="large" />
               </View>
             )}
+
+            <Button block primary onPress={this.pickImage}>
+              <Text> Pick Image </Text>
+            </Button>
             <Button block primary onPress={this.saveToDB}>
               <Text> Submit </Text>
             </Button>
