@@ -43,16 +43,19 @@ class ResultForPorJ extends Component {
   pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       base64: true
-    });
+    }, (value => {console.log('value ',value)}));
+console.log('reached here ', result);
 
     this.setState({
       result: result
+    },()=>{
+      
+    console.log("image selected ",this.state.result);
     });
   };
 
   savetoDB = async () => {
-    console.log(this.state.uniqueKey);
-    console.log("image selected");
+    
     let uniqueKey = this.state.uniqueKey;
 
     this.setState({
@@ -275,25 +278,16 @@ class ResultForPorJ extends Component {
                 }`}
               />
             </Item>
-            {this.state.measurements.pant.image_url ? (
+            
               <Image
                 style={{
                   height: 200,
                   width: 320,
                   resizeMode: "stretch"
                 }}
-                source={{ uri: this.state.measurements.pant.image_url }}
+                source={{ uri: this.state.measurements[this.state.clothType].image_url }}
               />
-            ) : (
-              <Image
-                style={{
-                  height: 200,
-                  width: 320,
-                  resizeMode: "stretch"
-                }}
-                source={{ uri: this.state.measurements.jean.image_url }}
-              />
-            )}
+            
 
             {this.state.loading && (
               <View style={styles.loading}>

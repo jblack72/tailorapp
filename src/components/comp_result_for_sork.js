@@ -52,65 +52,84 @@ class ResultForSork extends Component {
   };
 
   savetoDB = async () => {
-    console.log(this.state.uniqueKey);
-    console.log("image selected");
+    
     let uniqueKey = this.state.uniqueKey;
 
     this.setState({
       loading: true
     });
 
-    if (result.cancelled) {
+    if (this.state.result) {
+      if (this.state.result.cancelled) {
+        this.setState({
+          loading: false
+        });
+      }
+      if (!this.state.result.cancelled) {
+        this.setState({ image: result.uri });
+
+        let base64Img = `data:image/jpg;base64,${result.base64}`;
+        let apiUrl = "https://api.cloudinary.com/v1_1/dixwiepue/image/upload";
+
+        let data = {
+          file: base64Img,
+          upload_preset: "xvv0gosj"
+        };
+
+        console.log("image selected another");
+
+        fetch(apiUrl, {
+          body: JSON.stringify(data),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        })
+          .then(responsejson => {
+            console.log("new image selected");
+            let data = responsejson._bodyText;
+            if (responsejson.ok) {
+              responsejson.json().then(json => {
+                console.log("connection success");
+                let dbCon = db
+                  .database()
+                  .ref("/orders/" + this.state.orderID + "/" + uniqueKey);
+
+                let obj = {};
+                obj["measurements"] = this.state.measurements;
+                obj["measurements"][this.state.clothType]["image_url"] =
+                  json.url;
+
+                console.log("before uploading ", obj);
+
+                dbCon.update(obj);
+                alert("Successfully uploading the data to the server");
+                console.log("before successfll");
+                this.setState({
+                  loading: false
+                });
+              });
+            }
+          })
+          .catch(err => console.log(err));
+      }
+    } else {
+      let dbCon = db
+        .database()
+        .ref("/orders/" + this.state.orderID + "/" + uniqueKey);
+
+      let obj = {};
+      obj["measurements"] = this.state.measurements;
+      // obj["measurements"][this.state.clothType]["image_url"] = json.url;
+
+      console.log("before uploading");
+      dbCon.update(obj);
+      alert("Successfully uploading the data to the server");
+      console.log("before successfll");
+
       this.setState({
         loading: false
       });
-    }
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-
-      let base64Img = `data:image/jpg;base64,${result.base64}`;
-      let apiUrl = "https://api.cloudinary.com/v1_1/dixwiepue/image/upload";
-
-      let data = {
-        file: base64Img,
-        upload_preset: "xvv0gosj"
-      };
-
-      console.log("image selected another");
-
-      fetch(apiUrl, {
-        body: JSON.stringify(data),
-        headers: {
-          "content-type": "application/json"
-        },
-        method: "POST"
-      })
-        .then(responsejson => {
-          console.log("new image selected");
-          let data = responsejson._bodyText;
-          if (responsejson.ok) {
-            responsejson.json().then(json => {
-              console.log("connection success");
-              let dbCon = db
-                .database()
-                .ref("/orders/" + this.state.orderID + "/" + uniqueKey);
-
-              let obj = {};
-              obj["measurements"] = this.state.measurements;
-              obj["measurements"][this.state.clothType]["image_url"] = json.url;
-
-              console.log("before uploading ", obj);
-
-              dbCon.update(obj);
-              alert("Successfully uploading the data to the server");
-              console.log("before successfll");
-              this.setState({
-                loading: false
-              });
-            });
-          }
-        })
-        .catch(err => console.log(err));
     }
   };
 
@@ -286,25 +305,16 @@ class ResultForSork extends Component {
               />
             </Item>
             <CardItem>
-              {this.state.measurements.shirt.image_url ? (
-                <Image
-                  style={{
-                    height: 200,
-                    width: 320,
-                    resizeMode: "stretch"
-                  }}
-                  source={{ uri: this.state.measurements.shirt.image_url }}
-                />
-              ) : (
-                <Image
-                  style={{
-                    height: 200,
-                    width: 320,
-                    resizeMode: "stretch"
-                  }}
-                  source={{ uri: this.state.measurements.kurta.image_url }}
-                />
-              )}
+              <Image
+                style={{
+                  height: 200,
+                  width: 320,
+                  resizeMode: "stretch"
+                }}
+                source={{
+                  uri: this.state.measurements[this.state.clothType].image_url
+                }}
+              />
             </CardItem>
             {this.state.loading && (
               <View style={styles.loading}>

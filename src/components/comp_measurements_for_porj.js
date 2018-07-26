@@ -58,12 +58,13 @@ class MeasurementsForPorJ extends Component {
   };
 
   savetoDB = async () => {
+    // console.log('result ', this.state.result);
     this.setState({
       loading: true
     });
 
     if (!this.state.result.cancelled) {
-      this.setState({ image: this.state.result.uri });
+      // this.setState({ image: this.state.result.uri });
 
       let base64Img = `data:image/jpg;base64,${this.state.result.base64}`;
       let apiUrl = "https://api.cloudinary.com/v1_1/dixwiepue/image/upload";

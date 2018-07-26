@@ -58,6 +58,7 @@ class MeasurementsForSorK extends Component {
   };
 
   savetoDB = async () => {
+    // console.log('result saveToDB', this.state.result);
     this.setState({
       loading: true
     });
