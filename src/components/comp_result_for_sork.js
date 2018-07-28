@@ -46,8 +46,23 @@ class ResultForSork extends Component {
       base64: true
     });
 
+    var measurements = this.state.measurements;
+    
+    // switch(this.state.clothType){
+    //   case "pant":
+    //     measurements.pant.
+    //     break;
+    //   case "jean":
+    //     newimageurl = {...this.state.measurements.jean.image_url};
+    //     break;
+    // }
+
+    measurements[this.state.clothType].image_url = result.uri;
+
+
     this.setState({
-      result: result
+      result: result,
+      measurements
     });
   };
 
@@ -325,7 +340,7 @@ class ResultForSork extends Component {
             <Button block primary onPress={this.pickImage}>
               <Text> Pick Image </Text>
             </Button>
-            <Button block primary onPress={this.saveToDB}>
+            <Button block primary onPress={this.savetoDB}>
               <Text> Submit </Text>
             </Button>
           </Body>

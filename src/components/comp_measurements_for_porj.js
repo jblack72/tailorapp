@@ -36,7 +36,8 @@ class MeasurementsForPorJ extends Component {
       order: this.props.order,
       imageresult: null,
       loading: false,
-      result: null
+      result: null,
+      imageURL: "http://vignette1.wikia.nocookie.net/ofibty/images/5/56/Insert-Photo-Here.jpg/revision/latest?cb=20130607022022"
     };
   }
 
@@ -53,7 +54,8 @@ class MeasurementsForPorJ extends Component {
     });
 
     this.setState({
-      result: result
+      result: result,
+      imageURL:result.uri
     });
   };
 
@@ -242,7 +244,7 @@ class MeasurementsForPorJ extends Component {
               width: 320,
               resizeMode: "stretch"
             }}
-            source={{ uri: this.state.measurements.image_url }}
+            source={{ uri: this.state.imageURL }}
           />
           {this.state.loading && (
             <View style={styles.loading}>

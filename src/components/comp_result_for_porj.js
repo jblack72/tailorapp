@@ -44,10 +44,24 @@ class ResultForPorJ extends Component {
     let result = await ImagePicker.launchImageLibraryAsync({
       base64: true
     }, (value => {console.log('value ',value)}));
-console.log('reached here ', result);
+    console.log('reached here ', result);
+
+    var measurements = this.state.measurements;
+    
+    // switch(this.state.clothType){
+    //   case "pant":
+    //     measurements.pant.
+    //     break;
+    //   case "jean":
+    //     newimageurl = {...this.state.measurements.jean.image_url};
+    //     break;
+    // }
+
+    measurements[this.state.clothType].image_url = result.uri;
 
     this.setState({
-      result: result
+      result: result,
+      measurements
     },()=>{
       
     console.log("image selected ",this.state.result);
@@ -298,7 +312,7 @@ console.log('reached here ', result);
             <Button block primary onPress={this.pickImage}>
               <Text> Pick Image </Text>
             </Button>
-            <Button block primary onPress={this.saveToDB}>
+            <Button block primary onPress={this.savetoDB}>
               <Text> Submit </Text>
             </Button>
           </Body>
